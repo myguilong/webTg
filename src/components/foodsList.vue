@@ -10,6 +10,10 @@
     >
       <div slot="tags" style="margin-top:8px;">
         <van-tag type="danger">次日达</van-tag>
+        
+        <van-tag type="danger" v-if="item.limit">
+          限购商品
+        </van-tag>
       </div>
       <div slot="footer">
         <van-button type="primary" size="mini">购买</van-button>

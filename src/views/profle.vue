@@ -21,7 +21,8 @@
     </van-row>
 
     <van-cell-group class="user-group">
-      <van-cell icon="records" title="申请团长" is-link />
+      <van-cell icon="records" title="申请团长" is-link to="/createHeader" />
+       <van-cell icon="records" :title="money" is-link />
     </van-cell-group>
 
     <van-cell-group>
@@ -33,18 +34,29 @@
   </div>
 </template>
 <script>
+import { constants } from 'crypto';
 export default {
   data() {
     return {
-       user:{}
+      money:''
     }
   },
  async created(){
-      let res = await this.$http.get('/users/getuser')
-      this.user = res.data.data
+  this.$isLogin(this).then(res => {
+        this.fetchUserMoney()
+      });
+     
   },
   methods: {
-  
+    toCrateHeader(){
+      console.log('456')
+    },
+   async fetchUserMoney(){
+     console.log(this.$store.state.users._id)
+       const res = await this.$http.get(`/webuser/money?id=${this.$store.state.users._id}`)
+      console.log(res)
+      this.money = `可用余额${res.data.data.money}`
+    }
   }
 }
 </script>

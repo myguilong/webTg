@@ -1,114 +1,131 @@
 <template>
   <div>
-    <van-checkbox-group class="card-goods" v-model="checkedGoods">
-      <van-checkbox
-        class="card-goods__item"
-        v-for="item in goods"
-        :key="item._id"
-        :name="item._id"
-      >
+    <van-checkbox-group v-model="result">
+      <van-swipe-cell v-for="(item, index) in goods" :key="index" class="wrap">
+        <van-checkbox class="checkbox" :key="item._id" :name="item._id"></van-checkbox>
         <van-card
-          :title="item.name"
-          :desc="item.desc"
-          :num="item.num"
-          :price="20"
-          :thumb="item.thumb"
+          class="cartDetil"
+          :title="item.commites.name"
+          :desc="item.commites.specifications"
+          :num="item.number"
+          :price="item.commites.price"
+          :thumb="item.commites.bannerlist[0]"
         />
-      </van-checkbox>
+        <template slot="right">
+          <van-button class="delBtn" square type="danger" text="删除" @click="delCart(item._id)" />
+        </template>
+      </van-swipe-cell>
     </van-checkbox-group>
     <van-submit-bar
-      :price="totalPrice"
+      :price="totalPrice*100"
       :disabled="!checkedGoods.length"
       :button-text="submitBarText"
       @submit="onSubmit"
     />
   </div>
 </template>
-
 <script>
-import { Checkbox, CheckboxGroup, Card, SubmitBar, Toast } from 'vant';
+import { Dialog } from 'vant';
 export default {
-  components: {
-    [Card.name]: Card,
-    [Checkbox.name]: Checkbox,
-    [SubmitBar.name]: SubmitBar,
-    [CheckboxGroup.name]: CheckboxGroup
-  },
   data() {
     return {
-      checkedGoods: ['1', '2', '3'],
-      goods: [{
-        id: '1',
-        title: '进口香蕉',
-        desc: '约250g，2根',
-        price: 200,
-        num: 1,
-        thumb: 'https://img.yzcdn.cn/public_files/2017/10/24/2f9a36046449dafb8608e99990b3c205.jpeg'
-      }, {
-        id: '2',
-        title: '陕西蜜梨',
-        desc: '约600g',
-        price: 690,
-        num: 1,
-        thumb: 'https://img.yzcdn.cn/public_files/2017/10/24/f6aabd6ac5521195e01e8e89ee9fc63f.jpeg'
-      }, {
-        id: '3',
-        title: '美国伽力果',
-        desc: '约680g/3个',
-        price: 2680,
-        num: 1,
-        thumb: 'https://img.yzcdn.cn/public_files/2017/10/24/320454216bbe9e25c7651e1fa51b31fd.jpeg'
-      }]
+      checkedGoods: ["1", "2", "3"],
+      goods: [],
+      result: [],
+      totalPrice: "0"
     };
   },
   computed: {
     submitBarText() {
-      const count = this.checkedGoods.length;
-      return '结算' + (count ? `(${count})` : '');
-    },
-    totalPrice() {
-      return this.goods.reduce((total, item) => total + (this.checkedGoods.indexOf(item.id) !== -1 ? item.price : 0), 0);
+      return `结算(${this.result.length})`;
+    }
+  },
+  watch: {
+    result() {
+      // this.goods.map(item=>{
+      //   console.log(item)
+      // })
+      let arr = [];
+      if (this.result.length == 0) {
+        this.totalPrice = 0;
+        return;
+      }
+      this.result.map(item => {
+        this.goods.map(i => {
+          if (i._id == item) {
+            arr.push(i.commites.price * i.number);
+          }
+        });
+      });
+      this.totalPrice = arr.reduce((toal, item) => {
+        return toal + item;
+      });
     }
   },
   methods: {
     formatPrice(price) {
       return (price / 100).toFixed(2);
     },
-    onSubmit() {
-      Toast('点击结算');
+   async onSubmit() {
+       let res = await this.$http.post('/order/create',{
+         foodsList:this.result,
+         userid:this.$store.state.users._id
+       })
+      Dialog.confirm({
+        title: "支付",
+        message: "将从你的额度中扣除相应的金额"
+      })
+        .then(() => {
+          console.log(this.result)
+          // on confirm
+        })
+        .catch(() => {
+           console.log('取消')
+          // on cancel
+        });
     },
-    async fetchCart(){
-        // console.log(this.$store.state.users.name,'aasda')
-          //  const json = this.$store.state.users
-           console.log(this.$store.state.users._id)
-          let res = await this.$http.get(`/cart/getCart?userid=${this.$store.state.users._id}`)
-          console.log(res)
-          // this.goods = res.data.data
+    async fetchCart() {
+      let res = await this.$http.get(
+        `/cart/getCart?userid=${this.$store.state.users._id}`
+      );
+      console.log(res);
+      this.goods = res.data.data;
+    },
+    async delCart(value) {
+      let res = await this.$http.delete(`/rest/cart/delete?id=${value}`);
+      console.log(res);
+      this.$notify("删除成功");
+      this.fetchCart();
     }
   },
-  created(){
-     
-     
-  },
-  mounted(){
-  
-       this.$isLogin(this).then(res=>{
-         console.log(res,'asfcv')
-          this.fetchCart()
-       })
-      // console.log(this.$store.state.users._id,'123456789')
-      // console.log(this.$store.state.users._id,'123456789')
-      // console.log(this.$store.state.users._id,'123456789')
-
-      // console.log(this.$store.state.users._id,'123456789')
-       
-
-
+  created() {},
+  mounted() {
+    this.$isLogin(this).then(res => {
+      this.fetchCart();
+    });
   }
 };
 </script>
 
 <style lang="less">
+.wrap {
+  position: relative;
+}
+.checkbox {
+  width: 20px;
+  position: absolute;
+  z-index: 500;
+  top: 50px;
+  left: 4px;
+}
+.delBtn {
+  height: 115px;
+}
+.cartDetil {
+  width: 355px;
+  float: left;
+  padding-left: 26px;
+}
 .card-goods {
   padding: 10px 0;
   background-color: #fff;
@@ -134,13 +151,13 @@ export default {
   }
 }
 .van-submit-bar {
-    position: fixed;
-    bottom:70px;
-    left: 0;
-    z-index: 100;
-    width: 100%;
-    background-color: #fff;
-    -webkit-user-select: none;
-    user-select: none;
+  position: fixed;
+  bottom: 51px;
+  left: 0;
+  z-index: 100;
+  width: 100%;
+  background-color: #fff;
+  -webkit-user-select: none;
+  user-select: none;
 }
 </style>

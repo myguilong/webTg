@@ -4,6 +4,7 @@
      return new Promise((resolve) => {
         if(_this.$store.state.users.name){
             //状态为已经登录
+            resolve('2')
         }else{
             _this.$http.get('/users/getuser').then(res=>{
                 // eslint-disable-next-line no-empty

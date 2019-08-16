@@ -1,7 +1,37 @@
 <template>
   <div>
     <router-view></router-view>
-    <van-row class="fixedMenu" v-show="$route.meta.menuShow">
+    <van-tabbar route v-show="$route.meta.menuShow">
+    <van-tabbar-item
+      replace
+      to="/index"
+      icon="home-o"
+    >
+     首页
+    </van-tabbar-item>
+    <van-tabbar-item
+      replace
+      to="/category"
+      icon="apps-o"
+    >
+      分类
+    </van-tabbar-item>
+      <van-tabbar-item
+      replace
+      to="/cart"
+      icon="cart-o"
+    >
+      购物车
+    </van-tabbar-item>
+     <van-tabbar-item
+      replace
+      to="/profle"
+      icon="contact"
+    >
+      我的
+    </van-tabbar-item>
+  </van-tabbar>
+    <!-- <van-row class="fixedMenu" v-show="$route.meta.menuShow">
       <van-col span="6">
         <router-link to="/index" :class="$route.path=='/index'?'active':''">
           <van-icon name="wap-home" size="27px" />
@@ -26,7 +56,7 @@
           <span>我的</span>
         </router-link>
       </van-col>
-    </van-row>
+    </van-row> -->
   </div>
 </template>
 <style lang="less">

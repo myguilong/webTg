@@ -83,6 +83,7 @@ export default {
           userid:this.$store.state.users._id,
           commitesid:this.mygoods._id
         })
+       this.$notify(res.data.msg);
          
     }
   },

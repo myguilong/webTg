@@ -6,6 +6,7 @@ import http from './http'
 import 'amfe-flexible'
 import store from './store'
 import isLogin from './plugins/login'
+
 Vue.config.productionTip = false
 Vue.prototype.$http = http
 Vue.prototype.$isLogin = isLogin

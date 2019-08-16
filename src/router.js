@@ -7,6 +7,7 @@ import Cart from './views/cart.vue'
 import commites from './views/commitesInfo.vue'
 import Login from './views/login.vue'
 import regist from './views/regist.vue'
+import createHeader from './views/headerCreate.vue'
 Vue.use(Router)
 export default new Router({
   routes: [
@@ -63,6 +64,11 @@ export default new Router({
       path:'/regist',
       name:'regist',
       component:regist
+    },
+    {
+      path:"/createHeader",
+      name:'createHeader',
+      component:createHeader
     }
   ]
 })
