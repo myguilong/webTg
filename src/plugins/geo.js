@@ -2,6 +2,7 @@ export default function getPosition() {
     return new Promise((resolve, reject) => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
+         
           let latitude = position.coords.latitude
           let longitude = position.coords.longitude
           let data = {
@@ -10,6 +11,8 @@ export default function getPosition() {
           }
           resolve(data)
         }, function () {
+          // eslint-disable-next-line no-console
+          console.log(arguments)
           reject(arguments)
         })
       } else {

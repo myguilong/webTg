@@ -25,7 +25,7 @@
   </div>
 </template>
 <script>
-import { Dialog } from 'vant';
+import { Dialog } from "vant";
 export default {
   data() {
     return {
@@ -66,23 +66,33 @@ export default {
     formatPrice(price) {
       return (price / 100).toFixed(2);
     },
-   async onSubmit() {
-       let res = await this.$http.post('/order/create',{
-         foodsList:this.result,
-         userid:this.$store.state.users._id
-       })
-      Dialog.confirm({
-        title: "支付",
-        message: "将从你的额度中扣除相应的金额"
-      })
-        .then(() => {
-          console.log(this.result)
-          // on confirm
+    async onSubmit() {
+      let data = localStorage.getItem("selectHeader");
+      data = JSON.parse(data);
+      let res = await this.$http.post("/order/create", {
+        foodsList: this.result,
+        userid: this.$store.state.users._id,
+        headerId: data.userId
+      });
+      console.log(res);
+      if (res.data.data.DDNO) {
+        //订单号生成成功，去支付
+        Dialog.confirm({
+          title: "支付",
+          message: "将从你的额度中扣除相应的金额"
         })
-        .catch(() => {
-           console.log('取消')
-          // on cancel
-        });
+          .then(() => {
+             this.$http.post('/order/pay',{
+               orderNo:res.data.data.DDNO,
+               userid:this.$store.state.users._id
+             })
+             this.fetchCart()
+             this.$router.push('/orderStatus')
+          })
+          .catch(() => {
+            console.log("取消");
+          });
+      }
     },
     async fetchCart() {
       let res = await this.$http.get(
@@ -92,7 +102,7 @@ export default {
       this.goods = res.data.data;
     },
     async delCart(value) {
-      let res = await this.$http.delete(`/rest/cart/delete?id=${value}`);
+      let res = await this.$http.get(`/rest/cart/delete?id=${value}`);
       console.log(res);
       this.$notify("删除成功");
       this.fetchCart();

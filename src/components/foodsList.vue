@@ -31,10 +31,8 @@ export default {
   },
   methods: {
     async fetchFoodlist() {
-      this.$http.get("/rest/comities/list").then(res => {
-        console.log(res);
+      this.$http.get(`/rest/comities/list?id=${this.categoryid}`).then(res => {
         this.list = res.data.data;
-        console.log(this.list);
       });
     },
     toFoodsInfo(toFoodsInfo){
@@ -42,7 +40,6 @@ export default {
     }
   },
   created() {
-    console.log(this.categoryid, "created生命周期中是否存在传递的值");
     this.fetchFoodlist();
   }
 };

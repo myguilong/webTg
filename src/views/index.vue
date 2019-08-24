@@ -5,13 +5,13 @@
     <div class="line"></div>
     <van-row class="headerInfo">
       <van-col :span="15" class="info">
-        <van-image round width="50px" height="50px" src="https://img.yzcdn.cn/vant/cat.jpeg" />
+        <van-image round width="50px" height="50px" :src="header.imgSrc" />
         <div>
-          <p>明智之举</p>
+          <p>{{header.name}}</p>
           <p>
-            <van-icon name="location-o" size="3px"></van-icon>安华汇北塔写字楼
+            <van-icon name="location-o" size="3px"></van-icon>{{header.city}}
           </p>
-          <p>"团购名字"</p>
+          <p>{{header.address}}</p>
         </div>
       </van-col>
       <van-col :span="4" style="text-align:center;">
@@ -19,8 +19,10 @@
         <span style="display:block;font-size:13px;">分享</span>
       </van-col>
       <van-col :span="4" style="text-align:center;">
+        <div  @click="selectHeader()">
         <van-icon name="user-o" size="25"></van-icon>
         <span style="display:block;font-size:13px;">附近团长</span>
+        </div>
       </van-col>
     </van-row>
     <van-swipe :autoplay="3000" style="height: 150px;" indicator-color="white" class="swipe">
@@ -45,10 +47,10 @@
           v-for="(item,index) in categoryList"
           :title="item.name"
           :key="index"
-          :name="item.index"
+          :name="item._id"
         >
          <!-- 放子组件 -->
-         <foodsList :categoryid='item.name'/>
+         <foodsList :categoryid='item._id'/>
         </van-tab>
       </van-tabs>
     
@@ -60,6 +62,9 @@ import foodsList from '../components/foodsList'
 export default {
   data() {
     return {
+       header:{
+
+      },
       images: [
         "https://img.yzcdn.cn/vant/apple-1.jpg",
         "https://img.yzcdn.cn/vant/apple-2.jpg"
@@ -93,13 +98,22 @@ export default {
           name: "休闲食品",
           index:11
         }
-      ]
+      ],
+     
     };
   },
   components: {
       foodsList
   },
   methods: {
+    getSelectHeader(){
+      const res = localStorage.getItem('selectHeader')
+      if(res){
+        this.header = JSON.parse(res)
+      }else{
+        this.$router.push('/selectHeader')
+      }
+    },
     toSearch() {
       console.log("1234");
     },
@@ -108,10 +122,21 @@ export default {
     },
     fetchCategory(name,title){
         console.log(name,title)
+    },
+    selectHeader(){
+        console.log('调用')
+       this.$router.push('/selectHeader')
+    },
+    async getCategory(){
+      //获取分类的接口
+        const data = await this.$http.get('/rest/category/list')
+        console.log(data)
+        this.categoryList = data.data.data
     }
   },
   created(){
-   
+   this.getSelectHeader()
+   this.getCategory()
     }
 };
 </script>

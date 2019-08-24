@@ -8,6 +8,9 @@ import commites from './views/commitesInfo.vue'
 import Login from './views/login.vue'
 import regist from './views/regist.vue'
 import createHeader from './views/headerCreate.vue'
+import selectHeader from './views/selectHeader.vue'
+import orderStatus from './views/orderStatus.vue'
+import headerOrder from './views/headerOrder.vue'
 Vue.use(Router)
 export default new Router({
   routes: [
@@ -69,6 +72,20 @@ export default new Router({
       path:"/createHeader",
       name:'createHeader',
       component:createHeader
+    },{
+      path:'/selectHeader',
+      name:'selectHeader',
+      component:selectHeader
+    },
+    {
+      path:'/orderStatus',
+      name:'orderStatus',
+      component:orderStatus
+    },
+    {
+      path:'/headerOrder',
+      name:'headerOrder',
+      component:headerOrder 
     }
   ]
 })
