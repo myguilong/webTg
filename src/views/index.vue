@@ -9,7 +9,8 @@
         <div>
           <p>{{header.name}}</p>
           <p>
-            <van-icon name="location-o" size="3px"></van-icon>{{header.city}}
+            <van-icon name="location-o" size="3px"></van-icon>
+            {{header.city}}
           </p>
           <p>{{header.address}}</p>
         </div>
@@ -19,9 +20,9 @@
         <span style="display:block;font-size:13px;">分享</span>
       </van-col>
       <van-col :span="4" style="text-align:center;">
-        <div  @click="selectHeader()">
-        <van-icon name="user-o" size="25"></van-icon>
-        <span style="display:block;font-size:13px;">附近团长</span>
+        <div @click="selectHeader()">
+          <van-icon name="user-o" size="25"></van-icon>
+          <span style="display:block;font-size:13px;">附近团长</span>
         </div>
       </van-col>
     </van-row>
@@ -38,33 +39,38 @@
           <p>距结束</p>
         </van-col>
         <van-col :span="6" class="fzButton">
-          <van-button round plain hairline type="primary">复制拼团</van-button>
+          <van-button round plain hairline type="primary" @click="scrollCs">复制拼团</van-button>
         </van-col>
       </van-row>
-      <van-tabs background="#F7F7F7" sticky animated color="#7DCC21" title-active-color="#7DCC21"   @scroll="scroll"
-          @click="fetchCategory">
+      <van-tabs
+        background="#F7F7F7"
+        sticky
+        animated
+        color="#7DCC21"
+        title-active-color="#7DCC21"
+        @scroll="scroll"
+        @click="fetchCategory"
+      >
         <van-tab
           v-for="(item,index) in categoryList"
           :title="item.name"
           :key="index"
           :name="item._id"
         >
-         <!-- 放子组件 -->
-         <foodsList :categoryid='item._id'/>
+          <!-- 放子组件 -->
+          <foodsList :categoryid="item._id" />
         </van-tab>
       </van-tabs>
-    
     </div>
   </div>
 </template>
 <script>
-import foodsList from '../components/foodsList'
+import foodsList from "../components/foodsList";
 export default {
   data() {
     return {
-       header:{
-
-      },
+      header: {},
+      asTop: "",
       images: [
         "https://img.yzcdn.cn/vant/apple-1.jpg",
         "https://img.yzcdn.cn/vant/apple-2.jpg"
@@ -72,46 +78,65 @@ export default {
       categoryList: [
         {
           name: "热卖",
-          index:2
+          index: 2
         },
         {
           name: "蔬菜水果",
-           index:5
+          index: 5
         },
         {
           name: "水产冰冻",
-          index:7
+          index: 7
         },
         {
           name: "休闲食品",
-          index:8
+          index: 8
         },
         {
           name: "休闲食品",
-          index:9
+          index: 9
         },
         {
           name: "水产冰冻",
-          index:10
+          index: 10
         },
         {
           name: "休闲食品",
-          index:11
+          index: 11
         }
-      ],
-     
+      ]
     };
   },
   components: {
-      foodsList
+    foodsList
+  },
+  mounted() {
+    let top = localStorage.getItem("scrolltop");
+    console.log(top, "保留的顶部距离");
+  },
+
+  beforeRouteLeave(to, from, next) {
+    this.scrollTop =
+      document.documentElement.scrollTop || document.body.scrollTop;
+    next();
+  },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      document.body.scrollTop = vm.scrollTop;
+    });
   },
   methods: {
-    getSelectHeader(){
-      const res = localStorage.getItem('selectHeader')
-      if(res){
-        this.header = JSON.parse(res)
-      }else{
-        this.$router.push('/selectHeader')
+    scrollCs() {
+      console.log("456789");
+      document.documentElement.scrollTop = "548";
+      document.body.scrollTop = "548";
+    },
+    getSelectHeader() {
+      const res = localStorage.getItem("selectHeader");
+      if (res) {
+        this.header = JSON.parse(res);
+      } else {
+        this.$router.push("/selectHeader");
       }
     },
     toSearch() {
@@ -119,25 +144,26 @@ export default {
     },
     scroll(scrollTop, isFixed) {
       console.log(scrollTop);
+      this.asTop = scrollTop.scrollTop;
     },
-    fetchCategory(name,title){
-        console.log(name,title)
+    fetchCategory(name, title) {
+      console.log(name, title);
     },
-    selectHeader(){
-        console.log('调用')
-       this.$router.push('/selectHeader')
+    selectHeader() {
+      console.log("调用");
+      this.$router.push("/selectHeader");
     },
-    async getCategory(){
+    async getCategory() {
       //获取分类的接口
-        const data = await this.$http.get('/rest/category/list')
-        console.log(data)
-        this.categoryList = data.data.data
+      const data = await this.$http.get("/rest/category/list");
+      console.log(data);
+      this.categoryList = data.data.data;
     }
   },
-  created(){
-   this.getSelectHeader()
-   this.getCategory()
-    }
+  created() {
+    this.getSelectHeader();
+    this.getCategory();
+  }
 };
 </script>
 <style lang='less'>

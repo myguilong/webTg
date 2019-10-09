@@ -23,14 +23,17 @@ export default {
     async fetchlogin(){
      const res = await this.$http.post('/users/signin',{
                 username:this.phone,
-                password:this.password
+                password:this.password,
+                pintai:'web'
          })
          if(res.data.code==0){
             this.$notify('登录成功');
-            let result = await this.$http.get('/users/getuser')
-            console.log(result.data)
-            this.$store.commit('setUser',result.data)
-            this.$router.push('/index')
+            console.log(res)
+            // let result = await this.$http.get('/users/getuser')
+            // console.log(result.data)
+             localStorage.setItem('webUserinfo',JSON.stringify(res.data))
+             this.$store.commit('setUser',res.data)
+             this.$router.push('/index')
          }
         
     },

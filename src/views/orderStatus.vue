@@ -7,7 +7,7 @@
   <van-tab title="待支付">
      <order-status status='0'></order-status>
   </van-tab>
-  <van-tab title="未支付">
+  <van-tab title="已支付">
      <order-status status='1'></order-status>
   </van-tab>
   <van-tab title="已完成">

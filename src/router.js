@@ -23,7 +23,8 @@ export default new Router({
       name:'index',
       component:Index,
       meta:{
-        menuShow:true
+        menuShow:true,
+        keepAlive: true
       }
     },
     {
@@ -31,7 +32,8 @@ export default new Router({
       name:'Category',
       component:Category,
       meta:{
-        menuShow:true
+        menuShow:true,
+        keepAlive: true
       }
     },
     {
@@ -39,7 +41,8 @@ export default new Router({
       name:'Cart',
       component:Cart,
       meta:{
-        menuShow:true
+        menuShow:true,
+        keepAlive: false
       }
     },
     {
@@ -47,7 +50,8 @@ export default new Router({
       name:'Profle',
       component:Profle,
       meta:{
-        menuShow:true
+        menuShow:true,
+        keepAlive: false
       }
     },
     {
@@ -55,37 +59,56 @@ export default new Router({
       component:commites,
       props:true,
       meta:{
-        menuShow:false
+        menuShow:false,
+        keepAlive: false
       }
     },
     {
       path:'/Login',
       name:'login',
-      component:Login
+      component:Login,
+      meta:{
+        keepAlive: false
+      }
     },
     {
       path:'/regist',
       name:'regist',
-      component:regist
+      component:regist,
+      meta:{
+        keepAlive: false
+      }
     },
     {
       path:"/createHeader",
       name:'createHeader',
-      component:createHeader
+      component:createHeader,
+      meta:{
+        keepAlive: false
+      }
     },{
       path:'/selectHeader',
       name:'selectHeader',
-      component:selectHeader
+      component:selectHeader,
+      meta:{
+        keepAlive: false
+      }
     },
     {
       path:'/orderStatus',
       name:'orderStatus',
-      component:orderStatus
+      component:orderStatus,
+      meta:{
+        keepAlive: false
+      }
     },
     {
       path:'/headerOrder',
       name:'headerOrder',
-      component:headerOrder 
+      component:headerOrder,
+      meta:{
+        keepAlive: false
+      }
     }
   ]
 })

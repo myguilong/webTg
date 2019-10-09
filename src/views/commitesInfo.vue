@@ -65,7 +65,7 @@ export default {
     async addtoCart() {
       console.log(this.mygoods);
       let res = await this.$http.post("/cart/addCart", {
-        userid: this.$store.state.users._id,
+        userid: this.$store.state.users.user.id,
         commitesid: this.mygoods._id
       });
       this.$notify(res.data.msg);

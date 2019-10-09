@@ -71,7 +71,7 @@ export default {
       data = JSON.parse(data);
       let res = await this.$http.post("/order/create", {
         foodsList: this.result,
-        userid: this.$store.state.users._id,
+        userid: this.$store.state.users.user.id,
         headerId: data.userId
       });
       console.log(res);
@@ -84,7 +84,7 @@ export default {
           .then(() => {
              this.$http.post('/order/pay',{
                orderNo:res.data.data.DDNO,
-               userid:this.$store.state.users._id
+               userid:this.$store.state.users.user.id
              })
              this.fetchCart()
              this.$router.push('/orderStatus')
@@ -96,7 +96,7 @@ export default {
     },
     async fetchCart() {
       let res = await this.$http.get(
-        `/cart/getCart?userid=${this.$store.state.users._id}`
+        `/cart/getCart?userid=${this.$store.state.users.user.id}`
       );
       console.log(res);
       this.goods = res.data.data;
@@ -110,6 +110,7 @@ export default {
   },
   created() {},
   mounted() {
+    // console.log(this.$store.state.users.user.id,'状态,用户的——id')
     this.$isLogin(this).then(res => {
       this.fetchCart();
     });

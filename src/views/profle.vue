@@ -42,6 +42,7 @@ export default {
   },
  async created(){
   this.$isLogin(this).then(res => {
+    console.log(res,'promise状态')
         this.fetchUserMoney()
       });
   },
@@ -54,15 +55,15 @@ export default {
      
     },
    async fetchUserMoney(){
-     console.log(this.$store.state.users._id)
-      const res = await this.$http.get(`/webuser/money?id=${this.$store.state.users._id}`)
+     console.log(this.$store.state.users.user.id)
+      const res = await this.$http.get(`/webuser/money?id=${this.$store.state.users.user.id}`)
        this.setHeaderInfo()
       this.money = `可用余额${res.data.data.money}`
     },
     async setHeaderInfo(){
       //设置团长信息
 
-         const data = await this.$http.get(`/header/info?id=${this.$store.state.users._id}`)
+         const data = await this.$http.get(`/header/info?id=${this.$store.state.users.user.id}`)
           // localStorage.setItem('header',JSON.stringify(data.data.data))
              console.log(data)
              if(data.data.code == -1){
