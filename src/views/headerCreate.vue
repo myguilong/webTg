@@ -86,8 +86,8 @@ export default {
     async afterRead(file) {
       const clinet = new OSS({
         region: "oss-cn-shenzhen",
-        accessKeyId: "LTAIDaT373YHmkTC",
-        accessKeySecret: "ndTGswjQlWA2uz1m4Du3Drd73ULN13",
+        accessKeyId: "",
+        accessKeySecret: "",
         bucket: "mycz"
       });
       let res = await this.$http.get("/users/getuser");
